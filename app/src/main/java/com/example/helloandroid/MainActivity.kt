@@ -209,7 +209,7 @@ fun Greeting(navController: NavController, context: Context = LocalContext.curre
     jwt = preferencesManager.getData("jwt")
     Scaffold (
         topBar = {
-            TopAppBar(title = { Text(text = "Sign In", fontWeight = FontWeight.Bold, fontSize = 28.sp)},
+            TopAppBar(title = { Text(text = "Login", fontWeight = FontWeight.Bold, fontSize = 28.sp)},
                 colors = TopAppBarDefaults.smallTopAppBarColors(
                     containerColor = Color.White
                 ),
@@ -228,7 +228,7 @@ fun Greeting(navController: NavController, context: Context = LocalContext.curre
                 contentDescription = null,
                 alignment = Alignment.Center,
                 modifier = Modifier
-                    .height(350.dp)
+                    .height(240.dp)
                     .width(250.dp)
                     .offset(x = (-26).dp)
             )
@@ -316,7 +316,7 @@ fun Greeting(navController: NavController, context: Context = LocalContext.curre
                     containerColor = baseColor,
                     contentColor = Color.White),
                 ) {
-                Text(text = "Sign In", color = Color.White, fontWeight = FontWeight.Bold, fontSize = 16.sp )
+                Text(text = "Login", color = Color.White, fontWeight = FontWeight.Bold, fontSize = 16.sp )
             }
 //            Text(text = jwt)
 
