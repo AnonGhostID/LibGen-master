@@ -12,6 +12,7 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
@@ -229,6 +230,7 @@ fun Greeting(navController: NavController, context: Context = LocalContext.curre
                 modifier = Modifier
                     .height(350.dp)
                     .width(250.dp)
+                    .offset(x = (-26).dp)
             )
 
            OutlinedTextField(
