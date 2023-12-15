@@ -14,17 +14,22 @@ import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material.icons.filled.ExitToApp
 import androidx.compose.material.icons.filled.Lock
+import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.ElevatedButton
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateListOf
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -32,6 +37,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
@@ -55,6 +61,9 @@ fun HomePage(navController: NavController, context: Context = LocalContext.curre
     val preferencesManager = remember { PreferencesManager(context = context) }
     val listUser = remember { mutableStateListOf<UserRespon>() }
     //var listUser: List<UserRespon> by remember { mutableStateOf(List<UserRespon>()) }
+    var search by remember {
+        mutableStateOf(TextFieldValue(""))
+    }
     var baseUrl = "http://10.0.2.2:1337/api/"
     //var baseUrl = "http://10.217.17.11:1337/api/"
     val retrofit = Retrofit.Builder()
@@ -89,12 +98,48 @@ fun HomePage(navController: NavController, context: Context = LocalContext.curre
         }
 
     })
+//    fun loadData(search: String?){
+//        val call = retrofit.getData(search, "*", "username:desc")
+//        call.enqueue(object : Callback<List<UserRespon>> {
+//            override fun onResponse(
+//                call: Call<List<UserRespon>>,
+//                response: Response<List<UserRespon>>
+//            ) {
+//                if (response.code() == 200) {
+//                    //kosongkan list User terlebih dahulu
+//                    listUser.clear()
+//                    response.body()?.forEach{ userRespon ->
+//                        listUser.add(userRespon)
+//                        val x = userRespon.prodi?.namaProdi
+//                        val y = ""
+//                    }
+//                } else if (response.code() == 400) {
+//                    print("error login")
+//                    var toast = Toast.makeText(
+//                        context,
+//                        "Username atau password salah",
+//                        Toast.LENGTH_SHORT
+//                    ).show()
+//                }
+//            }
+//
+//            override fun onFailure(call: Call<List<UserRespon>>, t: Throwable) {
+//                print(t.message)
+//            }
+//
+//        })
+//    }
+//
+//    loadData(null)
+
     Scaffold(
         topBar = {
             TopAppBar(
                 title = {
-                    Text(text = "Home Page", fontWeight = FontWeight.Bold, fontSize = 28.sp, fontFamily = FontFamily(Font(R.font.poppins_black)),
-                    )
+                    Column {
+                        Text(text = "Home Page", fontWeight = FontWeight.Bold, fontSize = 28.sp, fontFamily = FontFamily(Font(R.font.poppins_black)),)
+                    }
+
                     IconButton(modifier = Modifier.padding(start = 320.dp), onClick = {
                         preferencesManager.saveData("jwt", "")
                         navController.navigate("greeting")
@@ -119,6 +164,20 @@ fun HomePage(navController: NavController, context: Context = LocalContext.curre
                 .padding(24.dp),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
+            OutlinedTextField(
+                value = search,
+                onValueChange = {newText -> search = newText},
+                label = { Text(
+                    text = "search")},
+                modifier = Modifier
+                    .padding(bottom = 1.dp),
+                trailingIcon = {
+                    IconButton(onClick = {}) {
+                        Icon(Icons.Default.Search ,
+                            contentDescription ="Search" )
+                    }
+                }
+            )
             LazyColumn {
                 listUser.forEach { user ->
                     item {

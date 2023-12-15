@@ -70,7 +70,7 @@ fun Register(navController: NavController, context: Context = LocalContext.curre
     var passwordVisibility by remember { mutableStateOf(false) }
     Scaffold (
         topBar = {
-            TopAppBar(title = { Text(text = "Sign In", fontWeight = FontWeight.Bold, fontSize = 28.sp)},
+            TopAppBar(title = { Text(text = "Sign Up", fontWeight = FontWeight.Bold, fontSize = 28.sp)},
                 colors = TopAppBarDefaults.smallTopAppBarColors(
                     containerColor = Color.White
                 ),
