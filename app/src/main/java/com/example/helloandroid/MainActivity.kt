@@ -97,8 +97,59 @@ class MainActivity : ComponentActivity() {
                 startDestination = "homepage"
             }
 
+            val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
+            val scope = rememberCoroutineScope()
+            ModalNavigationDrawer(
+                drawerState = drawerState,
+                drawerContent = {
+                    ModalDrawerSheet {
+                        Text("LibGen Menu", fontFamily = FontFamily(Font(R.font.poppins_semibold)), modifier = Modifier.padding(16.dp))
+                        Divider()
+                        NavigationDrawerItem(
+                            label = { Text(text = "Add User") },
+                            selected = false,
+                            onClick = {
+                                navController.navigate("register")
+                                scope.launch {
+                                    drawerState.close()
+                                }
 
-                Scaffold() { contentPadding ->
+                            }
+                        )
+                        // ...other drawer items
+                    }
+                }
+            ) {
+                Scaffold(
+                    topBar = {
+                        TopAppBar(
+                            title = { Text(text = "LibGen", fontFamily = FontFamily(Font(R.font.poppins_semibold))) },
+                            navigationIcon = {
+                                IconButton(onClick = {
+                                    scope.launch {
+                                        drawerState.apply {
+                                            if (isClosed) open() else close()
+                                        }
+                                    }
+                                }) {
+                                    Icon(imageVector = Icons.Outlined.Menu, contentDescription = "")
+                                }
+                            }
+                        )},
+//                    floatingActionButton = {
+//                        ExtendedFloatingActionButton(
+//                            text = { Text("Show drawer") },
+//                            icon = { Icon(Icons.Filled.Add, contentDescription = "") },
+//                            onClick = {
+//                                scope.launch {
+//                                    drawerState.apply {
+//                                        if (isClosed) open() else close()
+//                                    }
+//                                }
+//                            }
+//                        )
+//                    }
+                ) { contentPadding ->
                     // Screen content
                     NavHost(navController, startDestination = startDestination, modifier = Modifier.padding(contentPadding)) {
                         composable(route = "greeting") {
@@ -117,7 +168,7 @@ class MainActivity : ComponentActivity() {
                         }
                     }
                 }
-
+            }
 
 //            NavHost(navController, startDestination = startDestination) {
 //                composable(route = "greeting") {
@@ -151,7 +202,7 @@ fun Greeting(navController: NavController, context: Context = LocalContext.curre
     val eyeOpen = painterResource(id = R.drawable.view)
     val eyeClose = painterResource(id = R.drawable.hidden)
     var passwordVisibility by remember { mutableStateOf(false) }
-    var baseUrl = "http://192.168.1.8:1337/api/"
+    var baseUrl = "http://192.168.1.32:1337/api/"
     //var baseUrl = "http://10.217.17.11:1337/api/"
     var jwt by remember { mutableStateOf("") }
 
