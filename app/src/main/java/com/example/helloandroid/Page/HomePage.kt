@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.icons.Icons
@@ -137,7 +138,12 @@ fun HomePage(navController: NavController, context: Context = LocalContext.curre
             TopAppBar(
                 title = {
                     Column {
-                        Text(text = "Home Page", fontWeight = FontWeight.Bold, fontSize = 28.sp, fontFamily = FontFamily(Font(R.font.poppins_black)),)
+                        Text(
+                            text = "Home Page",
+                            fontWeight = FontWeight.Bold,
+                            fontSize = 28.sp,
+                            fontFamily = FontFamily(Font(R.font.poppins_black)),
+                        )
                     }
 
                     IconButton(modifier = Modifier.padding(start = 320.dp), onClick = {
@@ -157,6 +163,7 @@ fun HomePage(navController: NavController, context: Context = LocalContext.curre
             )
         }
     ) { innerPadding ->
+
         Column(
             modifier = Modifier
                 .fillMaxSize()
@@ -166,15 +173,20 @@ fun HomePage(navController: NavController, context: Context = LocalContext.curre
         ) {
             OutlinedTextField(
                 value = search,
-                onValueChange = {newText -> search = newText},
-                label = { Text(
-                    text = "search")},
+                onValueChange = { newText -> search = newText },
+                label = {
+                    Text(
+                        text = "search"
+                    )
+                },
                 modifier = Modifier
                     .padding(bottom = 1.dp),
                 trailingIcon = {
                     IconButton(onClick = {}) {
-                        Icon(Icons.Default.Search ,
-                            contentDescription ="Search" )
+                        Icon(
+                            Icons.Default.Search,
+                            contentDescription = "Search"
+                        )
                     }
                 }
             )
@@ -189,7 +201,10 @@ fun HomePage(navController: NavController, context: Context = LocalContext.curre
                             verticalAlignment = Alignment.CenterVertically
                         ) {
 
-                            Text(text = user.username, fontSize = 18.sp, fontFamily = FontFamily(Font(R.font.poppins_black)),
+                            Text(
+                                text = user.username,
+                                fontSize = 18.sp,
+                                fontFamily = FontFamily(Font(R.font.poppins_black)),
                             )
 
                             Row(
