@@ -158,7 +158,7 @@ fun Register(navController: NavController, context: Context = LocalContext.curre
             )
 
             ElevatedButton(onClick = {
-                var baseUrl = "http://10.0.2.2:1337/api/"
+                var baseUrl = "http://192.168.1.4:1337/api/"
                 //var baseUrl = "http://10.217.17.11:1337/api/"
 
                 val retrofit = Retrofit.Builder()

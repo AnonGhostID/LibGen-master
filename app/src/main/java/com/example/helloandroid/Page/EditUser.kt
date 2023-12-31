@@ -144,7 +144,7 @@ fun EditUser(navController: NavController,  userid : String?, usernameParameter:
 
             ElevatedButton(onClick = {
                 //navController.navigate("pagetwo")
-                var baseUrl = "http://10.0.2.2:1337/api/"
+                var baseUrl = "http://10.217.0.23:1337/api/"
                 val retrofit = Retrofit.Builder()
                     .baseUrl(baseUrl)
                     .addConverterFactory(GsonConverterFactory.create())

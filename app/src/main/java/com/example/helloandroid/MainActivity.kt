@@ -202,7 +202,7 @@ fun Greeting(navController: NavController, context: Context = LocalContext.curre
     val eyeOpen = painterResource(id = R.drawable.view)
     val eyeClose = painterResource(id = R.drawable.hidden)
     var passwordVisibility by remember { mutableStateOf(false) }
-    var baseUrl = "http://192.168.1.32:1337/api/"
+    var baseUrl = "http://192.168.1.4:1337/api/"
     //var baseUrl = "http://10.217.17.11:1337/api/"
     var jwt by remember { mutableStateOf("") }
 
