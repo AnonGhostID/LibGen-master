@@ -7,9 +7,12 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ExitToApp
 import androidx.compose.material.icons.filled.Favorite
+import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -54,7 +57,7 @@ fun HomePage(navController: NavController, context: Context = LocalContext.curre
     //var listUser: List<UserRespon> by remember { mutableStateOf(List<UserRespon>()) }
     var selectedItem by remember { mutableStateOf(0) }
     val items = listOf("Data Buku", "List Buku", "Add Akun")
-    var baseUrl = "http://192.168.1.4:1337/api/"
+    var baseUrl = "http://192.168.1.5:1337/api/"
     val screens = listOf("Screen 1", "Screen 2", "Screen 3")
     //var baseUrl = "http://10.217.17.11:1337/api/"
     val retrofit = Retrofit.Builder()
@@ -129,20 +132,45 @@ fun HomePage(navController: NavController, context: Context = LocalContext.curre
                 .padding(innerPadding),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            Spacer(modifier = Modifier.weight(1f))
-            NavigationBar(
+            Card(
                 modifier = Modifier.fillMaxWidth(),
-                containerColor = Color.Gray, // Customize as needed
-                contentColor = Color.Black, // Customize as needed
-                tonalElevation = 41.dp // Customize as needed
+                elevation = CardDefaults.cardElevation(defaultElevation = 8.dp), // Adjust elevation as desired  //
+                shape = androidx.compose.foundation.shape.RoundedCornerShape(16.dp)
+                // Adjust corner radius as desired
             ) {
-                items.forEachIndexed { index, item ->
-                    NavigationBarItem(
-                        icon = { Icon(Icons.Filled.Favorite, contentDescription = item) },
-                        label = { Text(text = item) },
-                        selected = selectedItem == index,
-                        onClick = { selectedItem = index }
-                    )
+                Column(
+                    modifier = Modifier.padding(34.dp) // Adjust padding as needed
+                ) {
+                    // Example content:
+                    Text(text = "This content is inside the CardView")
+                    // Add other elements as needed
+                }
+            }
+
+            Spacer(modifier = Modifier.weight(1f))
+
+
+            Column(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(innerPadding),
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                Spacer(modifier = Modifier.weight(1f))
+                NavigationBar(
+                    modifier = Modifier.fillMaxWidth(),
+                    containerColor = Color.Gray, // Customize as needed
+                    contentColor = Color.Black, // Customize as needed
+                    tonalElevation = 41.dp // Customize as needed
+                ) {
+                    items.forEachIndexed { index, item ->
+                        NavigationBarItem(
+                            icon = { Icon(Icons.Filled.Favorite, contentDescription = item) },
+                            label = { Text(text = item) },
+                            selected = selectedItem == index,
+                            onClick = { selectedItem = index }
+                        )
+                    }
                 }
             }
         }
