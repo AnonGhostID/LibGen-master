@@ -1,12 +1,17 @@
 package com.example.helloandroid.Page
 
 import android.content.Context
+import android.media.Image
+import android.util.Log
 import android.widget.Toast
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ExitToApp
@@ -31,10 +36,12 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.modifier.modifierLocalMapOf
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
@@ -59,7 +66,6 @@ fun HomePage(navController: NavController, context: Context = LocalContext.curre
     val items = listOf("Data Buku", "List Buku", "Add Akun")
     var baseUrl = "http://192.168.1.5:1337/api/"
     val screens = listOf("Screen 1", "Screen 2", "Screen 3")
-    //var baseUrl = "http://10.217.17.11:1337/api/"
     val retrofit = Retrofit.Builder()
         .baseUrl(baseUrl)
         .addConverterFactory(GsonConverterFactory.create())
@@ -126,56 +132,95 @@ fun HomePage(navController: NavController, context: Context = LocalContext.curre
 
     ) { innerPadding ->
 
+
         Column(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(innerPadding),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            Card(
-                modifier = Modifier.fillMaxWidth(),
-                elevation = CardDefaults.cardElevation(defaultElevation = 8.dp), // Adjust elevation as desired  //
-                shape = androidx.compose.foundation.shape.RoundedCornerShape(16.dp)
-                // Adjust corner radius as desired
-            ) {
-                Column(
-                    modifier = Modifier.padding(34.dp) // Adjust padding as needed
-                ) {
-                    // Example content:
-                    Text(text = "This content is inside the CardView")
-                    // Add other elements as needed
-                }
-            }
-
             Spacer(modifier = Modifier.weight(1f))
-
-
-            Column(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .padding(innerPadding),
-                horizontalAlignment = Alignment.CenterHorizontally
+            NavigationBar(
+                modifier = Modifier.fillMaxWidth(),
+                containerColor = Color.Gray, // Customize as needed
+                contentColor = Color.Black, // Customize as needed
+                tonalElevation = 41.dp // Customize as needed
             ) {
-                Spacer(modifier = Modifier.weight(1f))
-                NavigationBar(
-                    modifier = Modifier.fillMaxWidth(),
-                    containerColor = Color.Gray, // Customize as needed
-                    contentColor = Color.Black, // Customize as needed
-                    tonalElevation = 41.dp // Customize as needed
-                ) {
-                    items.forEachIndexed { index, item ->
-                        NavigationBarItem(
-                            icon = { Icon(Icons.Filled.Favorite, contentDescription = item) },
-                            label = { Text(text = item) },
-                            selected = selectedItem == index,
-                            onClick = { selectedItem = index }
-                        )
-                    }
+                items.forEachIndexed { index, item ->
+                    NavigationBarItem(
+                        icon = { Icon(Icons.Filled.Favorite, contentDescription = item) },
+                        label = { Text(text = item) },
+                        selected = selectedItem == index,
+                        onClick = { selectedItem = index }
+                    )
                 }
             }
         }
-    }
-}
 
+
+            Row(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(innerPadding),
+            ) {
+                Card(
+//                modifier = Modifier.fillMaxWidth(),
+                    onClick = { Log.d("Click", "CardExample: Card Click")},
+                    modifier = Modifier
+                        .padding(10.dp)
+                        .size(width = 170.dp, height = 130.dp),
+                    elevation = CardDefaults.cardElevation(defaultElevation = 8.dp),
+                    shape = RoundedCornerShape(16.dp),
+                    colors = CardDefaults.cardColors(
+                        containerColor = Color.Green,
+                    )
+                ) {
+                    Column(
+                    ) {
+                        // Example content:
+                        Text(
+                            text = "Buku Panduan",
+                            modifier = Modifier
+                                .padding(16.dp),
+                            color = Color.Black,
+                            textAlign = TextAlign.Center,
+                        )
+
+                        // Add other elements as needed
+                    }
+                }
+                Card(
+                    onClick = { Log.d("Click", "CardExample: Card Click")},
+                    modifier = Modifier
+                        .padding(10.dp)
+                        .size(width = 170.dp, height = 130.dp),
+                    elevation = CardDefaults.cardElevation(defaultElevation = 8.dp),
+                    shape = RoundedCornerShape(16.dp),
+                    colors = CardDefaults.cardColors(
+                        containerColor = Color.Green,
+                    )
+                ) {
+                    Column(
+                    ) {
+                        // Example content:
+                        Text(
+                            text = "Buku Belajar Anak",
+                            modifier = Modifier
+                                .padding(16.dp),
+                            color = Color.Black,
+                            textAlign = TextAlign.Center,
+                        )
+
+                        // Add other elements as needed
+                    }
+                }
+
+                Spacer(modifier = Modifier.weight(1f))
+
+
+
+            }
+        }
+    }
 
 
