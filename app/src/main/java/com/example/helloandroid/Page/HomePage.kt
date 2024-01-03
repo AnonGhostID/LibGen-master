@@ -5,6 +5,7 @@ import android.media.Image
 import android.util.Log
 import android.widget.Toast
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -162,13 +163,13 @@ fun HomePage(navController: NavController, context: Context = LocalContext.curre
                 modifier = Modifier
                     .fillMaxSize()
                     .padding(innerPadding),
+                horizontalArrangement = Arrangement.Center,
             ) {
                 Card(
-//                modifier = Modifier.fillMaxWidth(),
                     onClick = { Log.d("Click", "CardExample: Card Click")},
                     modifier = Modifier
                         .padding(10.dp)
-                        .size(width = 170.dp, height = 130.dp),
+                        .size(width = 185.dp, height = 130.dp),
                     elevation = CardDefaults.cardElevation(defaultElevation = 8.dp),
                     shape = RoundedCornerShape(16.dp),
                     colors = CardDefaults.cardColors(
@@ -193,7 +194,7 @@ fun HomePage(navController: NavController, context: Context = LocalContext.curre
                     onClick = { Log.d("Click", "CardExample: Card Click")},
                     modifier = Modifier
                         .padding(10.dp)
-                        .size(width = 170.dp, height = 130.dp),
+                        .size(width = 185.dp, height = 130.dp),
                     elevation = CardDefaults.cardElevation(defaultElevation = 8.dp),
                     shape = RoundedCornerShape(16.dp),
                     colors = CardDefaults.cardColors(
