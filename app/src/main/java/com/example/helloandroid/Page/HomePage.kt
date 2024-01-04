@@ -50,6 +50,8 @@ import com.example.helloandroid.PreferencesManager
 import com.example.helloandroid.R
 import com.example.helloandroid.response.UserRespon
 import com.example.helloandroid.service.UserService
+import com.example.helloandroid.service.ProdukService
+import com.example.helloandroid.response.ProdukRespon
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -65,7 +67,7 @@ fun HomePage(navController: NavController, context: Context = LocalContext.curre
     //var listUser: List<UserRespon> by remember { mutableStateOf(List<UserRespon>()) }
     var selectedItem by remember { mutableStateOf(0) }
     val items = listOf("Data Buku", "List Buku", "Add Akun")
-    var baseUrl = "http://192.168.1.5:1337/api/"
+    var baseUrl = "https://api.tnadam.me/api/"
     val screens = listOf("Screen 1", "Screen 2", "Screen 3")
     val retrofit = Retrofit.Builder()
         .baseUrl(baseUrl)
