@@ -66,6 +66,7 @@ import androidx.navigation.NavController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import com.example.helloandroid.Page.AddPage
 import com.example.helloandroid.Page.EditUser
 import com.example.helloandroid.Page.HomePage
 import com.example.helloandroid.Page.Register
@@ -116,6 +117,17 @@ class MainActivity : ComponentActivity() {
 
                             }
                         )
+                        NavigationDrawerItem(
+                            label = { Text(text = "Add Page") },
+                            selected = false,
+                            onClick = {
+                                navController.navigate("addpage")
+                                scope.launch {
+                                    drawerState.close()
+                                }
+
+                            }
+                        )
                         // ...other drawer items
                     }
                 }
@@ -160,6 +172,9 @@ class MainActivity : ComponentActivity() {
                         }
                         composable(route = "register") {
                             Register(navController)
+                        }
+                        composable(route = "addpage") {
+                            AddPage(navController)
                         }
                         composable(
                             route = "edituser/{userid}/{username}/{email}",
