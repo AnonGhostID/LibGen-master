@@ -35,11 +35,12 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavController
 import com.example.helloandroid.R
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun AddPage(){
+fun AddPage(navController: NavController){
     val title = remember { mutableStateOf(TextFieldValue("")) }
     val date = remember { mutableStateOf(TextFieldValue("")) }
     val genre = remember { mutableStateOf(TextFieldValue("")) }
@@ -56,16 +57,6 @@ fun AddPage(){
                         )
                     }
 
-                    IconButton(modifier = Modifier.padding(start = 320.dp), onClick = {
-//                        preferencesManager.saveData("jwt", "")
-//                        navController.navigate("greeting")
-                    }) {
-                        Icon(
-                            Icons.Default.ExitToApp,
-                            contentDescription = "Sign Out",
-                            tint = Color.Gray
-                        )
-                    }
                 },
                 colors = TopAppBarDefaults.smallTopAppBarColors(
                     containerColor = Color.White

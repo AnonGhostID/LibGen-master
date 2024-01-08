@@ -5,6 +5,7 @@ import android.media.Image
 import android.util.Log
 import android.widget.Toast
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -66,7 +67,7 @@ fun HomePage(navController: NavController, context: Context = LocalContext.curre
     val listUser = remember { mutableStateListOf<UserRespon>() }
     //var listUser: List<UserRespon> by remember { mutableStateOf(List<UserRespon>()) }
     var selectedItem by remember { mutableStateOf(0) }
-    val items = listOf("Data Buku", "List Buku", "Add Akun")
+    val items = listOf("Data Buku", "List Buku", "Add Page")
     var baseUrl = "https://api.tnadam.me/api/"
     val screens = listOf("Screen 1", "Screen 2", "Screen 3")
     val retrofit = Retrofit.Builder()
@@ -154,7 +155,7 @@ fun HomePage(navController: NavController, context: Context = LocalContext.curre
                         icon = { Icon(Icons.Filled.Favorite, contentDescription = item) },
                         label = { Text(text = item) },
                         selected = selectedItem == index,
-                        onClick = { selectedItem = index }
+                        onClick = { navController.navigate(item) }
                     )
                 }
             }
@@ -168,7 +169,7 @@ fun HomePage(navController: NavController, context: Context = LocalContext.curre
                 horizontalArrangement = Arrangement.Center,
             ) {
                 Card(
-                    onClick = { Log.d("Click", "CardExample: Card Click")},
+                    onClick = { navController.navigate("register")},
                     modifier = Modifier
                         .padding(10.dp)
                         .size(width = 185.dp, height = 130.dp),

@@ -2,10 +2,12 @@ package com.example.helloandroid
 
 import android.content.Context
 import android.content.SharedPreferences
+import android.os.Build
 import android.os.Bundle
 import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.annotation.RequiresApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -66,9 +68,11 @@ import androidx.navigation.NavController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import com.example.helloandroid.Page.AddPage
 import com.example.helloandroid.Page.EditUser
 import com.example.helloandroid.Page.HomePage
 import com.example.helloandroid.Page.Register
+import com.example.helloandroid.Page.addData
 import com.example.helloandroid.data.LoginData
 import com.example.helloandroid.response.LoginRespon
 import com.example.helloandroid.service.LoginService
@@ -81,6 +85,7 @@ import retrofit2.converter.gson.GsonConverterFactory
 
 class MainActivity : ComponentActivity() {
 
+    @RequiresApi(Build.VERSION_CODES.Q)
     @OptIn(ExperimentalMaterial3Api::class)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -94,7 +99,7 @@ class MainActivity : ComponentActivity() {
             if(jwt.equals("")){
                 startDestination = "greeting"
             }else{
-                startDestination = "homepage"
+                startDestination = "addData"
             }
 
             val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
@@ -110,6 +115,17 @@ class MainActivity : ComponentActivity() {
                             selected = false,
                             onClick = {
                                 navController.navigate("register")
+                                scope.launch {
+                                    drawerState.close()
+                                }
+
+                            }
+                        )
+                        NavigationDrawerItem(
+                            label = { Text(text = "Add Page") },
+                            selected = false,
+                            onClick = {
+                                navController.navigate("addpage")
                                 scope.launch {
                                     drawerState.close()
                                 }
@@ -160,6 +176,12 @@ class MainActivity : ComponentActivity() {
                         }
                         composable(route = "register") {
                             Register(navController)
+                        }
+                        composable(route = "Add Page") {
+                            AddPage(navController)
+                        }
+                        composable(route = "addData") {
+                            addData(navController = (navController))
                         }
                         composable(
                             route = "edituser/{userid}/{username}/{email}",
