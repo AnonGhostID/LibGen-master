@@ -7,18 +7,14 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ExitToApp
-import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
-import androidx.compose.material3.NavigationBar
-import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
@@ -27,14 +23,12 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.produceState
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
@@ -47,30 +41,30 @@ import com.example.helloandroid.R
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
 import kotlinx.coroutines.withContext
-
-import kotlinx.serialization.Serializable
 import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.json.Json
 import java.net.URL
 
 
-
 @OptIn(ExperimentalMaterial3Api::class)
 @RequiresApi(Build.VERSION_CODES.Q)
 @Composable
-fun BookData(navController: NavController) {
+fun BookData(navController: NavController, textData: String) {
 
     val coroutineScope = rememberCoroutineScope()
     var imageUrl by remember { mutableStateOf("") }
+    var book by remember { mutableStateOf<ProductData?>(null) }
 
     LaunchedEffect(key1 = Unit) {
         imageUrl = coroutineScope.async { fetchImageUrl() }.await()
     }
 
-    val specificTextData by produceState(initialValue = "", producer = {
-        value = fetchSpecificTextData("Buku Gambar")
-    })
+    LaunchedEffect(key1 = textData) {
+        book = coroutineScope.async { fetchBookData(textData) }.await()
+    }
 
+
+    if (book != null) {
 
 
     Scaffold(
@@ -135,7 +129,7 @@ fun BookData(navController: NavController) {
                 Spacer(modifier = Modifier.padding(12.dp))
                 Column {
                     Text(
-                        text = specificTextData,
+                        text = textData,
                         style = TextStyle(
                             fontSize = 20.sp,
                             fontWeight = FontWeight(400),
@@ -167,7 +161,7 @@ fun BookData(navController: NavController) {
                         )
                     )
                     Text(
-                        text = "Rizqy Azmi PT.Ph.ind",
+                        text = book!!.attributes.Author,
                         style = TextStyle(
                             fontSize = 17.sp,
                             fontWeight = FontWeight(400),
@@ -187,7 +181,7 @@ fun BookData(navController: NavController) {
                 )
             )
             Text(
-                text = "Mythical, Glory, Bintang 100, kapan ya, bismillah",
+                text = book!!.attributes.Genre,
                 style = TextStyle(
                     fontSize = 20.sp,
                     fontWeight = FontWeight(600),
@@ -204,7 +198,7 @@ fun BookData(navController: NavController) {
                 )
             )
             Text(
-                text = "Description : orem ipsum dolor sitamet orem ipsum dolor sitamet orem ipsum dolor sitamet orem ipsum dolor sitamet orem ipsum dolor sitamet orem ipsum dolor sitamet orem ipsum dolor sitamet orem ipsum dolor sitamet orem ipsum ",
+                text = book!!.attributes.Description,
                 style = TextStyle(
                     fontSize = 20.sp,
                     fontWeight = FontWeight(600),
@@ -212,25 +206,10 @@ fun BookData(navController: NavController) {
                 )
             )
             Spacer(modifier = Modifier.padding(12.dp))
-            Text(
-                text = "Date of Purchase : ",
-                style = TextStyle(
-                    fontSize = 23.sp,
-                    fontWeight = FontWeight(600),
-                    color = Color(0xFF00676C),
-                )
-            )
-            Text(
-                text = "22/07/2001",
-                style = TextStyle(
-                    fontSize = 20.sp,
-                    fontWeight = FontWeight(600),
-                    color = Color.Black,
-                )
-            )
 
         }
     }
+}
 }
 suspend fun fetchImageUrl(): String {
     val url = "https://api.tnadam.me/api/products?populate=*"
@@ -239,10 +218,11 @@ suspend fun fetchImageUrl(): String {
     return "https://api.tnadam.me" + apiResponse.data.first().attributes.img.data.attributes.url
 }
 
-suspend fun fetchSpecificTextData(targetData: String): String {
+suspend fun fetchBookData(bookName: String): ProductData? {
     val url = "https://api.tnadam.me/api/products?populate=*"
     val response = withContext(Dispatchers.IO) { URL(url).readText() }
     val apiResponse = Json { ignoreUnknownKeys = true }.decodeFromString<ApiResponse>(response)
-    val targetItem = apiResponse.data.find { it.attributes.data == targetData }
-    return targetItem?.attributes?.data ?: "Data not found"
+    return apiResponse.data.firstOrNull { it.attributes.data == bookName }
 }
+
+

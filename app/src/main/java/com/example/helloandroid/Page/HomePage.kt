@@ -1,11 +1,7 @@
 package com.example.helloandroid.Page
 
 import android.content.Context
-import android.media.Image
-import android.util.Log
 import android.widget.Toast
-import androidx.compose.foundation.Image
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -39,7 +35,6 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.modifier.modifierLocalMapOf
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
@@ -52,8 +47,6 @@ import com.example.helloandroid.PreferencesManager
 import com.example.helloandroid.R
 import com.example.helloandroid.response.UserRespon
 import com.example.helloandroid.service.UserService
-import com.example.helloandroid.service.ProdukService
-import com.example.helloandroid.response.ProdukRespon
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import kotlinx.serialization.Serializable
@@ -80,8 +73,12 @@ data class ProductData(
 @Serializable
 data class ProductAttributes(
     val data: String,
-    val img: ImageData
+    val img: ImageData,
+    val Genre: String,
+    val Description: String,
+    val Author: String
 )
+
 
 @Serializable
 data class ImageData(
@@ -219,7 +216,7 @@ fun HomePage(navController: NavController, context: Context = LocalContext.curre
                 ) {
                     rowItems.forEach { textData ->
                         Card(
-                            onClick = { navController.navigate("Bookdata")},
+                            onClick = { navController.navigate("BookData/${textData}") },
                             modifier = Modifier
                                 .padding(10.dp)
                                 .size(width = 185.dp, height = 130.dp),
