@@ -46,7 +46,6 @@ import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
-import com.example.helloandroid.PreferencesManager
 import com.example.helloandroid.R
 import com.example.helloandroid.data.RegisterData
 import com.example.helloandroid.response.LoginRespon
@@ -158,7 +157,7 @@ fun Register(navController: NavController, context: Context = LocalContext.curre
             )
 
             ElevatedButton(onClick = {
-                var baseUrl = "http://192.168.1.4:1337/api/"
+                var baseUrl = "htts://api.tnadam.me/api/"
                 //var baseUrl = "http://10.217.17.11:1337/api/"
 
                 val retrofit = Retrofit.Builder()

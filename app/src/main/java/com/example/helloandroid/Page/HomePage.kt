@@ -223,7 +223,7 @@ fun HomePage(navController: NavController, context: Context = LocalContext.curre
                             elevation = CardDefaults.cardElevation(defaultElevation = 8.dp),
                             shape = RoundedCornerShape(16.dp),
                             colors = CardDefaults.cardColors(
-                                containerColor = Color.Green,
+                                containerColor = Color.Magenta,
                             )
                         ) {
                             Column(
@@ -233,6 +233,7 @@ fun HomePage(navController: NavController, context: Context = LocalContext.curre
                                     text = textData,
                                     modifier = Modifier
                                         .padding(16.dp),
+                                    fontSize = 22.sp,
                                     color = Color.Black,
                                     textAlign = TextAlign.Center,
                                 )

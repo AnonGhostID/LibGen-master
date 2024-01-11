@@ -55,8 +55,8 @@ fun BookData(navController: NavController, textData: String) {
     var imageUrl by remember { mutableStateOf("") }
     var book by remember { mutableStateOf<ProductData?>(null) }
 
-    LaunchedEffect(key1 = Unit) {
-        imageUrl = coroutineScope.async { fetchImageUrl() }.await()
+    LaunchedEffect(key1 = textData) {
+        imageUrl = fetchImageUrl(textData)
     }
 
     LaunchedEffect(key1 = textData) {
@@ -211,12 +211,18 @@ fun BookData(navController: NavController, textData: String) {
     }
 }
 }
-suspend fun fetchImageUrl(): String {
+suspend fun fetchImageUrl(bookName: String): String {
     val url = "https://api.tnadam.me/api/products?populate=*"
     val response = withContext(Dispatchers.IO) { URL(url).readText() }
     val apiResponse = Json { ignoreUnknownKeys = true }.decodeFromString<ApiResponse>(response)
-    return "https://api.tnadam.me" + apiResponse.data.first().attributes.img.data.attributes.url
+    val book = apiResponse.data.firstOrNull { it.attributes.data == bookName }
+    return if (book != null) {
+        "https://api.tnadam.me" + book.attributes.img.data.attributes.url
+    } else {
+        "" // return a default image URL or an empty string if the book is not found
+    }
 }
+
 
 suspend fun fetchBookData(bookName: String): ProductData? {
     val url = "https://api.tnadam.me/api/products?populate=*"
