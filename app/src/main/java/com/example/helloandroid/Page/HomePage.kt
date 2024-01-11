@@ -16,6 +16,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.ExitToApp
 import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material3.Card
@@ -152,7 +153,7 @@ fun HomePage(navController: NavController, context: Context = LocalContext.curre
             ) {
                 items.forEachIndexed { index, item ->
                     NavigationBarItem(
-                        icon = { Icon(Icons.Filled.Favorite, contentDescription = item) },
+                        icon = { Icon(Icons.Filled.Add, contentDescription = item) },
                         label = { Text(text = item) },
                         selected = selectedItem == index,
                         onClick = { navController.navigate(item) }

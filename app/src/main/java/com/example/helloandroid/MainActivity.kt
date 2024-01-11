@@ -301,13 +301,13 @@ fun Greeting(navController: NavController, context: Context = LocalContext.curre
                 call.enqueue(object : Callback<LoginRespon>{
                     override fun onResponse(call: Call<LoginRespon>, response: Response<LoginRespon>) {
                         print(response.code())
-                        if(response.code() == 200){
+                        if(response.isSuccessful){
                             jwt = response.body()?.jwt!!
                             preferencesManager.saveData("jwt", jwt)
                             navController.navigate("homepage")
-                        }else if(response.code() == 400){
-                            print("error login")
-                            var toast = Toast.makeText(context, "Username atau password salah", Toast.LENGTH_SHORT).show()
+                        }else {
+                            println("error login")
+                            Toast.makeText(context, "Username atau password salah", Toast.LENGTH_SHORT).show()
 
                         }
                     }
