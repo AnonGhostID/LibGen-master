@@ -165,10 +165,10 @@ class MainActivity : ComponentActivity() {
                         composable(route = "register") {
                             Register(navController)
                         }
-                        composable(route = "AddPage") {
+                        composable(route = "Addpage") {
                             AddPage(navController)
                         }
-                        composable(route = "BookData") {
+                        composable(route = "Bookdata") {
                             BookData(navController)
                         }
                         composable(

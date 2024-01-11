@@ -67,7 +67,7 @@ fun HomePage(navController: NavController, context: Context = LocalContext.curre
     val listUser = remember { mutableStateListOf<UserRespon>() }
     //var listUser: List<UserRespon> by remember { mutableStateOf(List<UserRespon>()) }
     var selectedItem by remember { mutableStateOf(0) }
-    val items = listOf("Data Buku", "List Buku", "Add Page")
+    val items = listOf("Bookdata", "Addpage")
     var baseUrl = "https://api.tnadam.me/api/"
     val screens = listOf("Screen 1", "Screen 2", "Screen 3")
     val retrofit = Retrofit.Builder()
@@ -169,7 +169,7 @@ fun HomePage(navController: NavController, context: Context = LocalContext.curre
                 horizontalArrangement = Arrangement.Center,
             ) {
                 Card(
-                    onClick = { navController.navigate("BookData")},
+                    onClick = { navController.navigate("Bookdata")},
                     modifier = Modifier
                         .padding(10.dp)
                         .size(width = 185.dp, height = 130.dp),

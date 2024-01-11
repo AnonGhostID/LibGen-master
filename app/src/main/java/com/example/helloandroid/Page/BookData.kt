@@ -198,23 +198,7 @@ fun BookData(navController: NavController) {
                     color = Color.Black,
                 )
             )
-            NavigationBar(
-                modifier = Modifier.fillMaxWidth(),
-                containerColor = Color.Gray, // Customize as needed
-                contentColor = Color.Black, // Customize as needed
-                tonalElevation = 41.dp // Customize as needed
-            ) {
-                val items = listOf("Data Buku", "List Buku", "Add Page")
-                var selectedItem by remember { mutableStateOf(3) }
-                items.forEachIndexed { index, item ->
-                    NavigationBarItem(
-                        icon = { Icon(Icons.Filled.Favorite, contentDescription = item) },
-                        label = { Text(text = item) },
-                        selected = selectedItem == index,
-                        onClick = { navController.navigate(item) }
-                    )
-                }
-            }
+
         }
     }
 }
