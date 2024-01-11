@@ -68,10 +68,10 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.example.helloandroid.Page.AddPage
+import com.example.helloandroid.Page.BookData
 import com.example.helloandroid.Page.EditUser
 import com.example.helloandroid.Page.HomePage
 import com.example.helloandroid.Page.Register
-import com.example.helloandroid.Page.bookdata
 import com.example.helloandroid.data.LoginData
 import com.example.helloandroid.response.LoginRespon
 import com.example.helloandroid.service.LoginService
@@ -165,11 +165,11 @@ class MainActivity : ComponentActivity() {
                         composable(route = "register") {
                             Register(navController)
                         }
-                        composable(route = "Add Page") {
+                        composable(route = "AddPage") {
                             AddPage(navController)
                         }
-                        composable(route = "Add Page") {
-                            bookdata(navController)
+                        composable(route = "BookData") {
+                            BookData(navController)
                         }
                         composable(
                             route = "edituser/{userid}/{username}/{email}",

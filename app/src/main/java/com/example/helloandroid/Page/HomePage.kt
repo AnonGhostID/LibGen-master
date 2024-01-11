@@ -169,7 +169,7 @@ fun HomePage(navController: NavController, context: Context = LocalContext.curre
                 horizontalArrangement = Arrangement.Center,
             ) {
                 Card(
-                    onClick = { navController.navigate("register")},
+                    onClick = { navController.navigate("BookData")},
                     modifier = Modifier
                         .padding(10.dp)
                         .size(width = 185.dp, height = 130.dp),

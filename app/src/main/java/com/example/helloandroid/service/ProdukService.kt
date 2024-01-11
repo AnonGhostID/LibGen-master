@@ -5,6 +5,6 @@ import retrofit2.Call
 import retrofit2.http.GET
 
 interface ProdukService {
-    @GET("products")
+    @GET("products?populate=*")
     fun getData() : Call<List<ProdukRespon>>
 }

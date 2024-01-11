@@ -44,7 +44,7 @@ import com.example.helloandroid.R
 @OptIn(ExperimentalMaterial3Api::class)
 @RequiresApi(Build.VERSION_CODES.Q)
 @Composable
-fun bookdata(navController: NavController) {
+fun BookData(navController: NavController) {
 
     Scaffold(
         topBar = {
