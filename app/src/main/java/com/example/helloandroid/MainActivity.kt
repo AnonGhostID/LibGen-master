@@ -101,6 +101,7 @@ class MainActivity : ComponentActivity() {
                 startDestination = "homepage"
             }
 
+
             val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
             val scope = rememberCoroutineScope()
             ModalNavigationDrawer(
