@@ -209,36 +209,41 @@ fun HomePage(navController: NavController, context: Context = LocalContext.curre
         }
 
 
-        Row(
+        Column(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(innerPadding),
-            horizontalArrangement = Arrangement.Center,
         ) {
-            textDataList.forEach { textData ->
-                Card(
-                    onClick = { navController.navigate("Bookdata")},
-                    modifier = Modifier
-                        .padding(10.dp)
-                        .size(width = 185.dp, height = 130.dp),
-                    elevation = CardDefaults.cardElevation(defaultElevation = 8.dp),
-                    shape = RoundedCornerShape(16.dp),
-                    colors = CardDefaults.cardColors(
-                        containerColor = Color.Green,
-                    )
+            textDataList.chunked(2).forEach { rowItems ->
+                Row(
+                    horizontalArrangement = Arrangement.Center,
                 ) {
-                    Column(
-                    ) {
-                        // Example content:
-                        Text(
-                            text = textData,
+                    rowItems.forEach { textData ->
+                        Card(
+                            onClick = { navController.navigate("Bookdata")},
                             modifier = Modifier
-                                .padding(16.dp),
-                            color = Color.Black,
-                            textAlign = TextAlign.Center,
-                        )
+                                .padding(10.dp)
+                                .size(width = 185.dp, height = 130.dp),
+                            elevation = CardDefaults.cardElevation(defaultElevation = 8.dp),
+                            shape = RoundedCornerShape(16.dp),
+                            colors = CardDefaults.cardColors(
+                                containerColor = Color.Green,
+                            )
+                        ) {
+                            Column(
+                            ) {
+                                // Example content:
+                                Text(
+                                    text = textData,
+                                    modifier = Modifier
+                                        .padding(16.dp),
+                                    color = Color.Black,
+                                    textAlign = TextAlign.Center,
+                                )
 
-                        // Add other elements as needed
+                                // Add other elements as needed
+                            }
+                        }
                     }
                 }
             }
