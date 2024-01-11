@@ -27,6 +27,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.produceState
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
@@ -52,38 +53,6 @@ import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.json.Json
 import java.net.URL
 
-@Serializable
-data class ApiResponse(
-    val data: List<ProductData>
-)
-
-@Serializable
-data class ProductData(
-    val id: Int,
-    val attributes: ProductAttributes
-)
-
-@Serializable
-data class ProductAttributes(
-    val data: String,
-    val img: ImageData
-)
-
-@Serializable
-data class ImageData(
-    val data: ImageAttributesData
-)
-
-@Serializable
-data class ImageAttributesData(
-    val attributes: ImageAttributes
-)
-
-@Serializable
-data class ImageAttributes(
-    val url: String? = null
-)
-
 
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -98,6 +67,9 @@ fun BookData(navController: NavController) {
         imageUrl = coroutineScope.async { fetchImageUrl() }.await()
     }
 
+    val specificTextData by produceState(initialValue = "", producer = {
+        value = fetchSpecificTextData("Buku Gambar")
+    })
 
 
 
@@ -163,7 +135,7 @@ fun BookData(navController: NavController) {
                 Spacer(modifier = Modifier.padding(12.dp))
                 Column {
                     Text(
-                        text = "Legenda BeSoft Bebek Software ",
+                        text = specificTextData,
                         style = TextStyle(
                             fontSize = 20.sp,
                             fontWeight = FontWeight(400),
@@ -265,4 +237,12 @@ suspend fun fetchImageUrl(): String {
     val response = withContext(Dispatchers.IO) { URL(url).readText() }
     val apiResponse = Json { ignoreUnknownKeys = true }.decodeFromString<ApiResponse>(response)
     return "https://api.tnadam.me" + apiResponse.data.first().attributes.img.data.attributes.url
+}
+
+suspend fun fetchSpecificTextData(targetData: String): String {
+    val url = "https://api.tnadam.me/api/products?populate=*"
+    val response = withContext(Dispatchers.IO) { URL(url).readText() }
+    val apiResponse = Json { ignoreUnknownKeys = true }.decodeFromString<ApiResponse>(response)
+    val targetItem = apiResponse.data.find { it.attributes.data == targetData }
+    return targetItem?.attributes?.data ?: "Data not found"
 }
