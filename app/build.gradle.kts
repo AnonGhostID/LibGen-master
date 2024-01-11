@@ -1,6 +1,7 @@
 plugins {
     id("com.android.application")
     id("org.jetbrains.kotlin.android")
+    id ("org.jetbrains.kotlin.plugin.serialization") version "1.5.31"
 }
 
 android {
@@ -52,6 +53,7 @@ android {
 dependencies {
     val navVersion = "2.6.0"
     implementation("androidx.datastore:datastore-preferences:1.0.0")
+    implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.3.0")
     implementation("androidx.compose.material3:material3:1.1.0-alpha02")
     implementation("androidx.navigation:navigation-compose:$navVersion")
     implementation("com.squareup.retrofit2:retrofit:2.4.0")

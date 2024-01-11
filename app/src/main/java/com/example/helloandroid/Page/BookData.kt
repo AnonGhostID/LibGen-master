@@ -24,9 +24,12 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.produceState
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -39,12 +42,36 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
+import coil.compose.rememberImagePainter
 import com.example.helloandroid.R
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.async
+import kotlinx.coroutines.withContext
+
+import kotlinx.serialization.Serializable
+import kotlinx.serialization.decodeFromString
+import kotlinx.serialization.json.Json
+import java.net.URL
+
+
 
 @OptIn(ExperimentalMaterial3Api::class)
 @RequiresApi(Build.VERSION_CODES.Q)
 @Composable
 fun BookData(navController: NavController) {
+
+    val coroutineScope = rememberCoroutineScope()
+    var imageUrl by remember { mutableStateOf("") }
+
+    LaunchedEffect(key1 = Unit) {
+        imageUrl = coroutineScope.async { fetchImageUrl() }.await()
+    }
+
+    val specificTextData by produceState(initialValue = "", producer = {
+        value = fetchSpecificTextData("Buku Gambar")
+    })
+
+
 
     Scaffold(
         topBar = {
@@ -52,7 +79,7 @@ fun BookData(navController: NavController) {
                 title = {
                     Column {
                         Text(
-                            text = "Home Page",
+                            text = "Data Buku",
                             fontWeight = FontWeight.Bold,
                             fontSize = 28.sp,
                             fontFamily = FontFamily(Font(R.font.poppins_black)),
@@ -96,17 +123,19 @@ fun BookData(navController: NavController) {
             Spacer(modifier = Modifier.padding(10.dp))
             Row {
                 Image(
-                    painter = painterResource(id = R.drawable.profil),
+
+                    painter = rememberImagePainter(data = imageUrl),
                     contentDescription = "image description",
                     contentScale = ContentScale.FillBounds,
                     modifier = Modifier
                         .width(142.dp)
                         .height(131.dp)
                 )
+
                 Spacer(modifier = Modifier.padding(12.dp))
                 Column {
                     Text(
-                        text = "Legenda BeSoft Bebek Software ",
+                        text = specificTextData,
                         style = TextStyle(
                             fontSize = 20.sp,
                             fontWeight = FontWeight(400),
@@ -147,6 +176,7 @@ fun BookData(navController: NavController) {
                     )
                 }
             }
+
             Spacer(modifier = Modifier.padding(12.dp))
             Text(
                 text = "Genre : ",
@@ -202,4 +232,17 @@ fun BookData(navController: NavController) {
         }
     }
 }
+suspend fun fetchImageUrl(): String {
+    val url = "https://api.tnadam.me/api/products?populate=*"
+    val response = withContext(Dispatchers.IO) { URL(url).readText() }
+    val apiResponse = Json { ignoreUnknownKeys = true }.decodeFromString<ApiResponse>(response)
+    return "https://api.tnadam.me" + apiResponse.data.first().attributes.img.data.attributes.url
+}
 
+suspend fun fetchSpecificTextData(targetData: String): String {
+    val url = "https://api.tnadam.me/api/products?populate=*"
+    val response = withContext(Dispatchers.IO) { URL(url).readText() }
+    val apiResponse = Json { ignoreUnknownKeys = true }.decodeFromString<ApiResponse>(response)
+    val targetItem = apiResponse.data.find { it.attributes.data == targetData }
+    return targetItem?.attributes?.data ?: "Data not found"
+}

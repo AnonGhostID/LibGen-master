@@ -34,6 +34,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.produceState
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
@@ -54,15 +55,59 @@ import com.example.helloandroid.response.UserRespon
 import com.example.helloandroid.service.UserService
 import com.example.helloandroid.service.ProdukService
 import com.example.helloandroid.response.ProdukRespon
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
+import kotlinx.serialization.Serializable
+import kotlinx.serialization.decodeFromString
+import kotlinx.serialization.json.Json
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
+import java.net.URL
+
+@Serializable
+data class ApiResponse(
+    val data: List<ProductData>
+)
+
+@Serializable
+data class ProductData(
+    val id: Int,
+    val attributes: ProductAttributes
+)
+
+@Serializable
+data class ProductAttributes(
+    val data: String,
+    val img: ImageData
+)
+
+@Serializable
+data class ImageData(
+    val data: ImageAttributesData
+)
+
+@Serializable
+data class ImageAttributesData(
+    val attributes: ImageAttributes
+)
+
+@Serializable
+data class ImageAttributes(
+    val url: String? = null
+)
+
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun HomePage(navController: NavController, context: Context = LocalContext.current) {
+
+    val textDataList by produceState(initialValue = listOf<String>(), producer = {
+        value = fetchAllTextData()
+    })
+
     //var listUser: List<UserRespon> = remember
     val preferencesManager = remember { PreferencesManager(context = context) }
     val listUser = remember { mutableStateListOf<UserRespon>() }
@@ -70,6 +115,7 @@ fun HomePage(navController: NavController, context: Context = LocalContext.curre
     var selectedItem by remember { mutableStateOf(0) }
     val items = listOf("Bookdata", "Addpage")
     var baseUrl = "https://api.tnadam.me/api/"
+
     val screens = listOf("Screen 1", "Screen 2", "Screen 3")
     val retrofit = Retrofit.Builder()
         .baseUrl(baseUrl)
@@ -163,12 +209,13 @@ fun HomePage(navController: NavController, context: Context = LocalContext.curre
         }
 
 
-            Row(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .padding(innerPadding),
-                horizontalArrangement = Arrangement.Center,
-            ) {
+        Row(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(innerPadding),
+            horizontalArrangement = Arrangement.Center,
+        ) {
+            textDataList.forEach { textData ->
                 Card(
                     onClick = { navController.navigate("Bookdata")},
                     modifier = Modifier
@@ -184,7 +231,7 @@ fun HomePage(navController: NavController, context: Context = LocalContext.curre
                     ) {
                         // Example content:
                         Text(
-                            text = "Buku Panduan",
+                            text = textData,
                             modifier = Modifier
                                 .padding(16.dp),
                             color = Color.Black,
@@ -194,38 +241,15 @@ fun HomePage(navController: NavController, context: Context = LocalContext.curre
                         // Add other elements as needed
                     }
                 }
-                Card(
-                    onClick = { Log.d("Click", "CardExample: Card Click")},
-                    modifier = Modifier
-                        .padding(10.dp)
-                        .size(width = 185.dp, height = 130.dp),
-                    elevation = CardDefaults.cardElevation(defaultElevation = 8.dp),
-                    shape = RoundedCornerShape(16.dp),
-                    colors = CardDefaults.cardColors(
-                        containerColor = Color.Green,
-                    )
-                ) {
-                    Column(
-                    ) {
-                        // Example content:
-                        Text(
-                            text = "Buku Belajar Anak",
-                            modifier = Modifier
-                                .padding(16.dp),
-                            color = Color.Black,
-                            textAlign = TextAlign.Center,
-                        )
-
-                        // Add other elements as needed
-                    }
-                }
-
-                Spacer(modifier = Modifier.weight(1f))
-
-
-
             }
         }
     }
+}
 
 
+suspend fun fetchAllTextData(): List<String> {
+    val url = "https://api.tnadam.me/api/products?populate=*"
+    val response = withContext(Dispatchers.IO) { URL(url).readText() }
+    val apiResponse = Json { ignoreUnknownKeys = true }.decodeFromString<ApiResponse>(response)
+    return apiResponse.data.map { it.attributes.data }
+}
