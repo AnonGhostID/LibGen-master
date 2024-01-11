@@ -1,5 +1,6 @@
 package com.example.helloandroid
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.content.SharedPreferences
 import android.os.Bundle
@@ -66,9 +67,11 @@ import androidx.navigation.NavController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import com.example.helloandroid.Page.AddPage
 import com.example.helloandroid.Page.EditUser
 import com.example.helloandroid.Page.HomePage
 import com.example.helloandroid.Page.Register
+import com.example.helloandroid.Page.bookdata
 import com.example.helloandroid.data.LoginData
 import com.example.helloandroid.response.LoginRespon
 import com.example.helloandroid.service.LoginService
@@ -81,6 +84,7 @@ import retrofit2.converter.gson.GsonConverterFactory
 
 class MainActivity : ComponentActivity() {
 
+    @SuppressLint("NewApi")
     @OptIn(ExperimentalMaterial3Api::class)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -160,6 +164,12 @@ class MainActivity : ComponentActivity() {
                         }
                         composable(route = "register") {
                             Register(navController)
+                        }
+                        composable(route = "Add Page") {
+                            AddPage(navController)
+                        }
+                        composable(route = "Add Page") {
+                            bookdata(navController)
                         }
                         composable(
                             route = "edituser/{userid}/{username}/{email}",
