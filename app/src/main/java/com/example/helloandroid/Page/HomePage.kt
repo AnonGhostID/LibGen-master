@@ -191,8 +191,8 @@ fun HomePage(navController: NavController, context: Context = LocalContext.curre
             Spacer(modifier = Modifier.weight(1f))
             NavigationBar(
                 modifier = Modifier.fillMaxWidth(),
-                containerColor = Color.Gray, // Customize as needed
-                contentColor = Color.Black, // Customize as needed
+                containerColor = Color(0xFF00676C), // Customize as needed
+                contentColor = Color.White, // Customize as needed
                 tonalElevation = 41.dp // Customize as needed
             ) {
                 items.forEachIndexed { index, item ->
@@ -225,7 +225,7 @@ fun HomePage(navController: NavController, context: Context = LocalContext.curre
                             elevation = CardDefaults.cardElevation(defaultElevation = 8.dp),
                             shape = RoundedCornerShape(16.dp),
                             colors = CardDefaults.cardColors(
-                                containerColor = Color.Magenta,
+                                containerColor = Color(0xFF00676C),
                             )
                         ) {
                             Column(
@@ -236,7 +236,7 @@ fun HomePage(navController: NavController, context: Context = LocalContext.curre
                                     modifier = Modifier
                                         .padding(16.dp),
                                     fontSize = 22.sp,
-                                    color = Color.Black,
+                                    color = Color.White,
                                     textAlign = TextAlign.Center,
                                 )
 
