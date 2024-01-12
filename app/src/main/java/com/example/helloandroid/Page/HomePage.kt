@@ -72,17 +72,18 @@ data class ProductData(
 
 @Serializable
 data class ProductAttributes(
-    val data: String,
-    val img: ImageData,
+    val nama: String,
+    val img: ImageData?,
     val Genre: String,
     val Description: String,
-    val Author: String
+    val Author: String,
+    val publishedAt: String
 )
 
 
 @Serializable
 data class ImageData(
-    val data: ImageAttributesData
+    val data: ImageAttributesData?
 )
 
 @Serializable
@@ -253,5 +254,5 @@ suspend fun fetchAllTextData(): List<String> {
     val url = "https://api.tnadam.me/api/products?populate=*"
     val response = withContext(Dispatchers.IO) { URL(url).readText() }
     val apiResponse = Json { ignoreUnknownKeys = true }.decodeFromString<ApiResponse>(response)
-    return apiResponse.data.map { it.attributes.data }
+    return apiResponse.data.map { it.attributes.nama }
 }

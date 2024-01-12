@@ -27,13 +27,31 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.example.helloandroid.R
+import com.example.helloandroid.data.AddBookData
+import com.example.helloandroid.data.AddBookDataWrapper
+import com.example.helloandroid.response.AddBookRespon
+import com.example.helloandroid.service.AddBookService
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
+import retrofit2.Retrofit
+import retrofit2.converter.gson.GsonConverterFactory
+
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun AddPage(navController: NavController){
     val title = remember { mutableStateOf(TextFieldValue("")) }
-    val date = remember { mutableStateOf(TextFieldValue("")) }
-    val genre = remember { mutableStateOf(TextFieldValue("")) }
+    val author = remember { mutableStateOf(TextFieldValue("")) } // Renamed from 'date'
+    val description = remember { mutableStateOf(TextFieldValue("")) } // Renamed from 'genre'
+    val genre = remember { mutableStateOf(TextFieldValue("")) } // New state for 'Genre'
+    val retrofit = Retrofit.Builder()
+        .baseUrl("https://api.tnadam.me/api/")
+        .addConverterFactory(GsonConverterFactory.create())
+        .build()
+
+    val service = retrofit.create(AddBookService::class.java)
+
     Scaffold(
         topBar = {
             TopAppBar(
@@ -55,8 +73,6 @@ fun AddPage(navController: NavController){
         }
 
     ) { innerPadding ->
-
-
         Column(
             modifier = Modifier
                 .fillMaxSize()
@@ -77,23 +93,7 @@ fun AddPage(navController: NavController){
                 onValueChange = { newTitle ->
                     title.value = newTitle
                 },
-                placeholder = { Text(text = "Type here...",style = TextStyle(
-                    fontSize = 12.sp,
-                    fontWeight = FontWeight(400),
-                    color = Color(0xFF000000),)) })
-            Text(
-                text = "Date Of launch",
-                style = TextStyle(
-                    fontSize = 20.sp,
-                    fontWeight = FontWeight(600),
-                    color = Color(0xFF00676C),
-                )
-            )
-            OutlinedTextField(value = date.value,
-                onValueChange = { newDate ->
-                    date.value = newDate
-                },
-                placeholder = { Text(text = "Type here...",style = TextStyle(
+                placeholder = { Text(text = "Ketik Nama Buku...",style = TextStyle(
                     fontSize = 12.sp,
                     fontWeight = FontWeight(400),
                     color = Color(0xFF000000),)) })
@@ -106,11 +106,11 @@ fun AddPage(navController: NavController){
                     color = Color(0xFF00676C),
                 )
             )
-            OutlinedTextField(value = date.value,
+            OutlinedTextField(value = genre.value,
                 onValueChange = { newGenre ->
                     genre.value = newGenre
                 },
-                placeholder = { Text(text = "Type here...",style = TextStyle(
+                placeholder = { Text(text = "Ketik Genre ",style = TextStyle(
                     fontSize = 12.sp,
                     fontWeight = FontWeight(400),
                     color = Color(0xFF000000),)) })
@@ -122,11 +122,11 @@ fun AddPage(navController: NavController){
                     color = Color(0xFF00676C),
                 )
             )
-            OutlinedTextField(value = date.value,
-                onValueChange = { newGenre ->
-                    genre.value = newGenre
+            OutlinedTextField(value = author.value,
+                onValueChange = { newAuthor ->
+                    author.value = newAuthor
                 },
-                placeholder = { Text(text = "Type here...",style = TextStyle(
+                placeholder = { Text(text = "Ketik Authornya",style = TextStyle(
                     fontSize = 12.sp,
                     fontWeight = FontWeight(400),
                     color = Color(0xFF000000),)) })
@@ -139,33 +139,38 @@ fun AddPage(navController: NavController){
                     color = Color(0xFF00676C),
                 )
             )
-            OutlinedTextField(value = date.value,
-                onValueChange = { newGenre ->
-                    genre.value = newGenre
+            OutlinedTextField(value = description.value,
+                onValueChange = { newDescription ->
+                    description.value = newDescription
                 },
-                placeholder = { Text(text = "Type here...",style = TextStyle(
-                    fontSize = 12.sp,
-                    fontWeight = FontWeight(400),
-                    color = Color(0xFF000000),)) })
-            Text(
-                text = "Purchase Date ",
-                style = TextStyle(
-                    fontSize = 20.sp,
-                    fontWeight = FontWeight(600),
-                    color = Color(0xFF00676C),
-                )
-            )
-            OutlinedTextField(value = date.value,
-                onValueChange = { newGenre ->
-                    genre.value = newGenre
-                },
-                placeholder = { Text(text = "Type here...",style = TextStyle(
+                placeholder = { Text(text = "Ketik desc",style = TextStyle(
                     fontSize = 12.sp,
                     fontWeight = FontWeight(400),
                     color = Color(0xFF000000),)) })
 
             Button(
-                onClick = {  },
+                onClick = {
+                    val bookData = AddBookData(
+                        Genre = genre.value.text,
+                        Description = description.value.text,
+                        Author = author.value.text,
+                        nama = title.value.text
+                    )
+                    val call = service.getData(AddBookDataWrapper(bookData)) // Wrap the book data
+                    call.enqueue(object : Callback<AddBookRespon> {
+                        override fun onResponse(call: Call<AddBookRespon>, response: Response<AddBookRespon>) {
+                            if (response.isSuccessful) {
+                                navController.navigate("homepage") // Replace "homepage" with the route of your homepage
+                            } else {
+                                // Handle error
+                            }
+                        }
+
+                        override fun onFailure(call: Call<AddBookRespon>, t: Throwable) {
+                            // Handle failure
+                        }
+                    })
+                },
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(16.dp),
@@ -175,6 +180,9 @@ fun AddPage(navController: NavController){
             ) {
                 Text(text = "Submit")
             }
+
+
+
 
         }
         }
