@@ -7,18 +7,15 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ExitToApp
-import androidx.compose.material.icons.filled.Favorite
+import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
-import androidx.compose.material3.NavigationBar
-import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
@@ -27,7 +24,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.produceState
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
@@ -46,31 +42,40 @@ import coil.compose.rememberImagePainter
 import com.example.helloandroid.R
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-
-import kotlinx.serialization.Serializable
 import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.json.Json
+import okhttp3.OkHttpClient
+import okhttp3.Request
 import java.net.URL
-
+import java.time.LocalDateTime
+import java.time.format.DateTimeFormatter
+import java.time.format.FormatStyle
 
 
 @OptIn(ExperimentalMaterial3Api::class)
 @RequiresApi(Build.VERSION_CODES.Q)
 @Composable
-fun BookData(navController: NavController) {
+fun BookData(navController: NavController, textData: String) {
 
     val coroutineScope = rememberCoroutineScope()
     var imageUrl by remember { mutableStateOf("") }
+    var book by remember { mutableStateOf<ProductData?>(null) }
 
-    LaunchedEffect(key1 = Unit) {
-        imageUrl = coroutineScope.async { fetchImageUrl() }.await()
+    LaunchedEffect(key1 = textData) {
+        imageUrl = fetchImageUrl(textData)
     }
 
-    val specificTextData by produceState(initialValue = "", producer = {
-        value = fetchSpecificTextData("Buku Gambar")
-    })
+    LaunchedEffect(key1 = textData) {
+        book = coroutineScope.async { fetchBookData(textData) }.await()
+    }
 
+
+    if (book != null) {
+        val publishedAt = LocalDateTime.parse(book!!.attributes.publishedAt, DateTimeFormatter.ISO_OFFSET_DATE_TIME)
+        val formattedPublishedAt = publishedAt.format(DateTimeFormatter.ofLocalizedDate(FormatStyle.MEDIUM))
 
 
     Scaffold(
@@ -123,8 +128,11 @@ fun BookData(navController: NavController) {
             Spacer(modifier = Modifier.padding(10.dp))
             Row {
                 Image(
-
-                    painter = rememberImagePainter(data = imageUrl),
+                    painter = if (imageUrl == "profil") {
+                        painterResource(R.drawable.profil)
+                    } else {
+                        rememberImagePainter(data = imageUrl)
+                    },
                     contentDescription = "image description",
                     contentScale = ContentScale.FillBounds,
                     modifier = Modifier
@@ -132,10 +140,11 @@ fun BookData(navController: NavController) {
                         .height(131.dp)
                 )
 
+
                 Spacer(modifier = Modifier.padding(12.dp))
                 Column {
                     Text(
-                        text = specificTextData,
+                        text = textData,
                         style = TextStyle(
                             fontSize = 20.sp,
                             fontWeight = FontWeight(400),
@@ -143,7 +152,7 @@ fun BookData(navController: NavController) {
                         )
                     )
                     Text(
-                        text = "Date of Launch",
+                        text = "Date of Publish",
                         style = TextStyle(
                             fontSize = 13.sp,
                             fontWeight = FontWeight(600),
@@ -151,7 +160,7 @@ fun BookData(navController: NavController) {
                         )
                     )
                     Text(
-                        text = "12/07/2002",
+                        text = formattedPublishedAt,
                         style = TextStyle(
                             fontSize = 20.sp,
                             fontWeight = FontWeight(400),
@@ -167,7 +176,7 @@ fun BookData(navController: NavController) {
                         )
                     )
                     Text(
-                        text = "Rizqy Azmi PT.Ph.ind",
+                        text = book!!.attributes.Author,
                         style = TextStyle(
                             fontSize = 17.sp,
                             fontWeight = FontWeight(400),
@@ -187,7 +196,7 @@ fun BookData(navController: NavController) {
                 )
             )
             Text(
-                text = "Mythical, Glory, Bintang 100, kapan ya, bismillah",
+                text = book!!.attributes.Genre,
                 style = TextStyle(
                     fontSize = 20.sp,
                     fontWeight = FontWeight(600),
@@ -204,7 +213,7 @@ fun BookData(navController: NavController) {
                 )
             )
             Text(
-                text = "Description : orem ipsum dolor sitamet orem ipsum dolor sitamet orem ipsum dolor sitamet orem ipsum dolor sitamet orem ipsum dolor sitamet orem ipsum dolor sitamet orem ipsum dolor sitamet orem ipsum dolor sitamet orem ipsum ",
+                text = book!!.attributes.Description,
                 style = TextStyle(
                     fontSize = 20.sp,
                     fontWeight = FontWeight(600),
@@ -212,37 +221,63 @@ fun BookData(navController: NavController) {
                 )
             )
             Spacer(modifier = Modifier.padding(12.dp))
-            Text(
-                text = "Date of Purchase : ",
-                style = TextStyle(
-                    fontSize = 23.sp,
-                    fontWeight = FontWeight(600),
-                    color = Color(0xFF00676C),
-                )
-            )
-            Text(
-                text = "22/07/2001",
-                style = TextStyle(
-                    fontSize = 20.sp,
-                    fontWeight = FontWeight(600),
-                    color = Color.Black,
-                )
-            )
+
+            Button(
+                onClick = {
+                    coroutineScope.launch {
+                        deleteData(book)
+                        delay(2000)  // delay for 2 seconds
+                        navController.navigate("homepage")
+                    }
+                },
+                modifier = Modifier.padding(top = 16.dp)
+            ) {
+                Text("Delete Data")
+            }
+
+
 
         }
     }
 }
-suspend fun fetchImageUrl(): String {
+}
+suspend fun fetchImageUrl(bookName: String): String {
     val url = "https://api.tnadam.me/api/products?populate=*"
     val response = withContext(Dispatchers.IO) { URL(url).readText() }
     val apiResponse = Json { ignoreUnknownKeys = true }.decodeFromString<ApiResponse>(response)
-    return "https://api.tnadam.me" + apiResponse.data.first().attributes.img.data.attributes.url
+    val book = apiResponse.data.firstOrNull { it.attributes.nama == bookName }
+    return if (book != null && book.attributes.img?.data?.attributes?.url != null) {
+        "https://api.tnadam.me" + book.attributes.img.data.attributes.url
+    } else {
+        "profil" // return the name of the local image resource if the book is not found or the image URL is null
+    }
 }
 
-suspend fun fetchSpecificTextData(targetData: String): String {
+
+
+suspend fun fetchBookData(bookName: String): ProductData? {
     val url = "https://api.tnadam.me/api/products?populate=*"
     val response = withContext(Dispatchers.IO) { URL(url).readText() }
     val apiResponse = Json { ignoreUnknownKeys = true }.decodeFromString<ApiResponse>(response)
-    val targetItem = apiResponse.data.find { it.attributes.data == targetData }
-    return targetItem?.attributes?.data ?: "Data not found"
+    return apiResponse.data.firstOrNull { it.attributes.nama == bookName }
 }
+
+suspend fun deleteData(book: ProductData?) {
+    if (book != null) {
+        val url = "https://api.tnadam.me/api/products/${book.id}"
+        withContext(Dispatchers.IO) {
+            val request = Request.Builder()
+                .url(url)
+                .delete()
+                .build()
+
+            val client = OkHttpClient()
+            val response = client.newCall(request).execute()
+
+            if (!response.isSuccessful) {
+                // TODO: Handle error
+            }
+        }
+    }
+}
+
